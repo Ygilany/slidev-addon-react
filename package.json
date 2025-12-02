@@ -13,8 +13,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/Ygilany/slidev-addon-react.git"
   },
+  "bugs": {
+    "url": "https://github.com/Ygilany/slidev-addon-react/issues"
+  },
+  "homepage": "https://github.com/Ygilany/slidev-addon-react#readme",
   "engines": {
     "slidev": ">=0.40.0"
   },

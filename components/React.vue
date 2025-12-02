@@ -3,7 +3,10 @@
  * React component wrapper for Slidev
  * 
  * Usage in slides:
- *   <React is="MyComponent" :someProp="value" />
+ *   <React is="Counter" :someProp="value" />
+ * 
+ * Components are auto-discovered from the react-components/ folder.
+ * The component name is derived from the filename (e.g., Counter.jsx -> "Counter")
  */
 import { onMounted, onUnmounted, ref, watch, getCurrentInstance } from 'vue'
 
@@ -18,10 +21,20 @@ let registry: Record<string, any> | null = null
 
 const loadRegistry = async () => {
   try {
-    const mod = await import('/react-components/index.ts')
-    registry = mod.default || mod
+    // Auto-discover all React components using Vite's glob import
+    const modules = import.meta.glob('/react-components/**/*.{jsx,tsx}', { eager: true })
+    
+    registry = {}
+    for (const path in modules) {
+      const mod = modules[path] as any
+      // Extract component name from path: /react-components/Counter.jsx -> "Counter"
+      const name = path.split('/').pop()?.replace(/\.(jsx|tsx)$/, '') || ''
+      if (name && mod.default) {
+        registry[name] = mod.default
+      }
+    }
   } catch (e) {
-    console.error('[slidev-addon-react] Failed to load react-components/index.ts:', e)
+    console.error('[slidev-addon-react] Failed to load react-components:', e)
     registry = {}
   }
 }
@@ -42,7 +55,6 @@ const renderReact = async () => {
   }
 
   if (!root) {
-    // Dynamic import to ensure proper bundling
     const ReactDOMClient = await import('react-dom/client')
     const createRoot = ReactDOMClient.createRoot || ReactDOMClient.default?.createRoot
     if (!createRoot) {
@@ -52,7 +64,6 @@ const renderReact = async () => {
     root = createRoot(container.value)
   }
 
-  // Dynamic import React
   const React = await import('react')
   const createElement = React.createElement || React.default?.createElement
 

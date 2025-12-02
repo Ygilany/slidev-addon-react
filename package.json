@@ -32,6 +32,9 @@
     "components",
     "setup",
     "README.md"
-  ]
+  ],
+  "devDependencies": {
+    "@slidev/types": "^52.10.1",
+    "vite": "^7.2.6"
+  }
 }
-

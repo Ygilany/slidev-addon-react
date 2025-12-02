@@ -1,0 +1,34 @@
+{
+  "name": "slidev-addon-react",
+  "version": "1.0.0",
+  "description": "Use React components with JSX in Slidev presentations",
+  "author": "",
+  "license": "MIT",
+  "keywords": [
+    "slidev-addon",
+    "slidev",
+    "react",
+    "jsx",
+    "tsx"
+  ],
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "engines": {
+    "slidev": ">=0.40.0"
+  },
+  "slidev": {
+    "addons": []
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "files": [
+    "components",
+    "setup",
+    "README.md"
+  ]
+}
+

@@ -10,8 +10,8 @@
  *   2. Registered in `react-components/index.ts`
  */
 import { onMounted, onUnmounted, ref, watch, getCurrentInstance } from 'vue'
-import { createRoot, type Root } from 'react-dom/client'
-import { createElement } from 'react'
+import * as ReactDOM from 'react-dom/client'
+import * as React from 'react'
 
 const props = defineProps<{
   /** Name of the React component to render (must be registered in react-components/index.ts) */
@@ -20,7 +20,7 @@ const props = defineProps<{
 
 const instance = getCurrentInstance()
 const container = ref<HTMLElement | null>(null)
-let root: Root | null = null
+let root: ReactDOM.Root | null = null
 let registry: Record<string, any> | null = null
 
 const loadRegistry = async () => {
@@ -50,6 +50,12 @@ const renderReact = async () => {
   }
 
   if (!root) {
+    // Handle both ESM and CJS exports
+    const createRoot = ReactDOM.createRoot || (ReactDOM as any).default?.createRoot
+    if (!createRoot) {
+      console.error('[slidev-addon-react] createRoot not found in react-dom/client')
+      return
+    }
     root = createRoot(container.value)
   }
 
@@ -67,6 +73,8 @@ const renderReact = async () => {
     }
   }
 
+  // Handle both ESM and CJS exports for createElement
+  const createElement = React.createElement || (React as any).default?.createElement
   root.render(createElement(ReactComp, cleanProps))
 }
 
@@ -84,4 +92,3 @@ watch(() => props.is, renderReact)
 <template>
   <div ref="container" class="slidev-react-container" />
 </template>
-

@@ -3,7 +3,7 @@ import { defineVitePluginsSetup } from '@slidev/types'
 export default defineVitePluginsSetup(() => {
   return [
     {
-      name: 'slidev-addon-react',
+      name: 'slidev-addon-react-jsx',
       enforce: 'pre',
       async transform(code, id) {
         // Only transform .jsx/.tsx files in react-components folder
@@ -26,15 +26,24 @@ export default defineVitePluginsSetup(() => {
       },
     },
     {
-      name: 'slidev-addon-react-optimize',
+      name: 'slidev-addon-react-config',
       config() {
         return {
           optimizeDeps: {
-            include: ['react', 'react-dom', 'react/jsx-runtime', 'react/jsx-dev-runtime'],
+            include: [
+              'react', 
+              'react-dom', 
+              'react-dom/client',
+              'react/jsx-runtime', 
+              'react/jsx-dev-runtime'
+            ],
+          },
+          // Ensure react-dom/client is properly resolved
+          resolve: {
+            dedupe: ['react', 'react-dom'],
           },
         }
       },
     },
   ]
 })
-

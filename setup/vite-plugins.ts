@@ -11,11 +11,7 @@ export default defineVitePluginsSetup(() => {
         return null
       }
 
-      // Use Vite's built-in esbuild transform
-      const { transform } = await import('vite')
-      
-      // Transform JSX to JS using esbuild via Vite
-      // We manually transform the JSX since Vite's transform expects full module
+      // Transform JSX using esbuild with React's automatic runtime
       const esbuild = await import('esbuild')
       const result = await esbuild.transform(code, {
         loader: id.endsWith('.tsx') ? 'tsx' : 'jsx',

@@ -76,9 +76,7 @@ const renderReact = async () => {
       continue
     }
     const val = attrs[key]
-    if (typeof val !== 'object' || val === null) {
-      cleanProps[key] = val
-    }
+    cleanProps[key] = val
   }
 
   root.render(createElement(ReactComp, cleanProps))

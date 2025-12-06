@@ -39,6 +39,22 @@
   ],
   "devDependencies": {
     "@slidev/types": "^52.10.1",
-    "vite": "^7.2.6"
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-vue": "^6.0.2",
+    "@vitest/ui": "^4.0.15",
+    "@vue/test-utils": "^2.4.6",
+    "happy-dom": "^20.0.11",
+    "jsdom": "^27.2.0",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
+    "vite": "^7.2.6",
+    "vitest": "^4.0.15"
+  },
+  "scripts": {
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage"
   }
 }

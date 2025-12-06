@@ -3,36 +3,36 @@ name: Publish to npm
 on:
   push:
     tags:
-      - 'v*.*.*'  # Triggers on version tags like v1.0.0, v1.2.3, etc.
-  workflow_dispatch:  # Allows manual triggering from GitHub UI
+      - 'v*.*.*'
+  workflow_dispatch:
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # Required for creating releases
-      id-token: write  # Required for npm provenance
-    env:
-      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-    
+      contents: write
+      id-token: write   # required for trusted publishing
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
-          always-auth: true
-          token: ${{ secrets.NPM_TOKEN }}
-      
+
+      # Ensure we have a recent npm that supports trusted publishing well
+      - name: Upgrade npm
+        run: npm install -g npm@latest
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Run tests
         run: npm run test:run
-      
+
       - name: Verify package.json version matches tag
         id: verify-version
         run: |
@@ -48,7 +48,7 @@ jobs:
             PACKAGE_VERSION=$(node -p "require('./package.json').version")
             echo "version=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
           fi
-      
+
       - name: Check if version already exists
         id: check-version
         run: |
@@ -60,14 +60,14 @@ jobs:
             echo "exists=false" >> $GITHUB_OUTPUT
             echo "Version $VERSION is new"
           fi
-      
+
       - name: Publish to npm
         if: steps.check-version.outputs.exists == 'false'
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          npm publish --provenance --access public
-      
+          # With trusted publishing, npm picks up OIDC automatically.
+          # No NODE_AUTH_TOKEN and no --provenance flag required.
+          npm publish --access public
+
       - name: Create GitHub Release
         if: steps.check-version.outputs.exists == 'false' && startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v1
@@ -75,4 +75,3 @@ jobs:
           name: Release ${{ steps.verify-version.outputs.version }}
           tag_name: ${{ github.ref_name }}
           generate_release_notes: true
-

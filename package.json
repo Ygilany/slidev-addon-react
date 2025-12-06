@@ -40,6 +40,7 @@
   ],
   "devDependencies": {
     "@slidev/types": "^52.10.1",
+    "@types/jsdom": "^27.0.0",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-vue": "^6.0.2",
@@ -59,7 +60,6 @@
     "test:coverage": "vitest run --coverage",
     "version:patch": "npm version patch && git push && git push --tags",
     "version:minor": "npm version minor && git push && git push --tags",
-    "version:major": "npm version major && git push && git push --tags",
-    "prepublishOnly": "npm run test:run"
+    "version:major": "npm version major && git push && git push --tags"
   }
 }

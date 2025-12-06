@@ -95,11 +95,17 @@ export default function Counter({ initial = 0 }: Props) {
 
 ## Props
 
-Props are passed from Vue to React. Primitive values (strings, numbers, booleans) are supported:
+Props are passed from Vue to React. Primitive values (strings, numbers, booleans), objects, and arrays are supported:
 
 ```markdown
+<!-- Primitives -->
 <React is="MyComponent" title="Hello" :count="42" :enabled="true" />
+
+<!-- Objects and arrays -->
+<React is="MyComponent" :config="{ theme: 'dark', size: 'large' }" :items="[1, 2, 3]" />
 ```
+
+When passing objects or arrays, use Vue's binding syntax (`:propName="..."`) with proper object/array literal syntax.
 
 ## How it works
 
@@ -108,6 +114,27 @@ This addon:
 1. Provides a `<React>` Vue component that mounts React components using `react-dom/client`
 2. Intercepts `.jsx`/`.tsx` files in `react-components/` and transforms them using esbuild with React's automatic JSX runtime (before Vue's JSX transform can process them)
 3. Pre-bundles React dependencies for optimal performance
+
+## Testing
+
+This package uses [Vitest](https://vitest.dev) for testing.
+
+```bash
+# Run tests
+npm test
+
+# Run tests in watch mode
+npm test
+
+# Run tests with UI
+npm run test:ui
+
+# Run tests once
+npm run test:run
+
+# Run tests with coverage
+npm run test:coverage
+```
 
 ## Local Development
 

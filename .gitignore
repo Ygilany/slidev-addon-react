@@ -1,2 +1,9 @@
 node_modules
 .DS_Store
+
+# Test coverage
+coverage
+*.lcov
+
+# Vitest
+.vitest

@@ -9,6 +9,7 @@
  * The component name is derived from the filename (e.g., Counter.jsx -> "Counter")
  */
 import { onMounted, onUnmounted, ref, watch, getCurrentInstance } from 'vue'
+import { filterProps } from '../utils/filter-props'
 
 const props = defineProps<{
   is: string
@@ -67,19 +68,11 @@ const renderReact = async () => {
   const React = await import('react')
   const createElement = React.createElement || React.default?.createElement
 
-  // Extract props from Vue attrs
+  // Extract props from Vue attrs using shared filtering function
+  // Filters: __*, on*, class, style keys and VNodes (safety measure)
+  // Allows: primitives, objects, arrays, functions (non-event handlers)
   const attrs = instance?.attrs || {}
-  const cleanProps: Record<string, any> = {}
-
-  for (const key in attrs) {
-    if (key.startsWith('__') || key.startsWith('on') || key === 'class' || key === 'style') {
-      continue
-    }
-    const val = attrs[key]
-    if (typeof val !== 'object' || val === null) {
-      cleanProps[key] = val
-    }
-  }
+  const cleanProps = filterProps(attrs)
 
   root.render(createElement(ReactComp, cleanProps))
 }

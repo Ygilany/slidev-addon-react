@@ -26,6 +26,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
       
+      - name: Run tests
+        run: npm run test:run
+      
       - name: Verify package.json version matches tag
         id: verify-version
         run: |

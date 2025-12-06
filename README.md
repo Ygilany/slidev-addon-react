@@ -120,16 +120,13 @@ This addon:
 This package uses [Vitest](https://vitest.dev) for testing.
 
 ```bash
-# Run tests
-npm test
-
 # Run tests in watch mode
 npm test
 
 # Run tests with UI
 npm run test:ui
 
-# Run tests once
+# Run tests once (used in CI)
 npm run test:run
 
 # Run tests with coverage
@@ -144,6 +141,63 @@ For local addon development, use an absolute path in your slides:
 addons:
   - /path/to/slidev-addon-react
 ```
+
+## Publishing
+
+This package uses GitHub Actions to automatically publish to npm when a version tag is pushed.
+
+### Publishing a New Version
+
+**Option 1: Using npm scripts (Recommended)**
+
+```bash
+# Patch version (1.0.0 -> 1.0.1)
+npm run version:patch
+
+# Minor version (1.0.0 -> 1.1.0)
+npm run version:minor
+
+# Major version (1.0.0 -> 2.0.0)
+npm run version:major
+```
+
+These scripts will:
+1. Update the version in `package.json`
+2. Create a git commit with the version change
+3. Create a git tag (e.g., `v1.0.1`)
+4. Push the commit and tag to GitHub
+
+**Option 2: Manual process**
+
+1. Update the version in `package.json`:
+   ```bash
+   # Edit package.json manually or use:
+   npm version patch|minor|major --no-git-tag-version
+   ```
+
+2. Commit the change:
+   ```bash
+   git add package.json
+   git commit -m "chore: bump version to X.Y.Z"
+   ```
+
+3. Create and push a version tag:
+   ```bash
+   git tag vX.Y.Z
+   git push origin vX.Y.Z
+   ```
+
+### What Happens Next
+
+When you push a version tag (e.g., `v1.0.1`), the GitHub Action will:
+- ✅ Install dependencies
+- ✅ **Run all tests** (publishing will fail if tests don't pass)
+- ✅ Verify the tag version matches `package.json`
+- ✅ Check if the version already exists on npm
+- ✅ Publish to npm (if it's a new version and tests pass)
+- ✅ Create a GitHub release with auto-generated release notes
+
+**Note:** Make sure you have `NPM_TOKEN` configured as a GitHub secret in your repository settings. The workflow will automatically prevent publishing if tests fail, ensuring only tested code is published.
 
 ## License
 

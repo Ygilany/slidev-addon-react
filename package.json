@@ -2,7 +2,11 @@
   "name": "slidev-addon-react",
   "version": "1.1.2",
   "description": "Use React components with JSX in Slidev presentations",
-  "author": "",
+  "author": {
+    "name": "Ygilany",
+    "email": "yahya.gilany@live.com",
+    "url": "https://yahyagilany.io"
+  },
   "license": "MIT",
   "keywords": [
     "slidev-addon",
